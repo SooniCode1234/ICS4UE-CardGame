@@ -1,6 +1,8 @@
 package ics4ue.sooni;
 
-import java.util.Scanner;;
+import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CardGame {
   public static void main(String[] args) {
@@ -44,6 +46,9 @@ public class CardGame {
       System.out.println("Your cards are:");
       System.out.println(playerOne.getHandString());
 
+      System.out.println("PlayerTwo's cards are:");
+      System.out.println(playerTwo.getHandString());
+
       // Regular expression to encompass the card numbers
       String cardIndexValidator = "[1-5]";
       System.out.print("Enter the index of the card you want to place: ");
@@ -62,10 +67,13 @@ public class CardGame {
       // Get the card based on the cardIndex
       Card cardToPlace = playerOne.getCards()[cardIndexInt - 1];
 
+      System.out.println("PlayerOne, you have chosen to place " + cardToPlace.getValue());
+
       playerOne.setGuessCardValue(cardToPlace.getValue());
 
-      // Print out data
-      System.out.println(playerOne.getGuessCardValue());
+      // Get the pair of cards in playerTwo's hand that sum to the value of the
+      // cardToPlace
+      ArrayList<HashMap<Integer, Integer>> pairs = playerTwo.getPossiblePairs();
     } else {
       System.out.println("PlayerTwo will go first!");
     }

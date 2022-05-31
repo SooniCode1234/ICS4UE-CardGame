@@ -1,5 +1,8 @@
 package ics4ue.sooni;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class Player {
   private Hand hand;
   private boolean isShowingGuessCard;
@@ -33,6 +36,16 @@ public class Player {
    */
   public String getHandString() {
     return hand.toString();
+  }
+
+  /**
+   * Get a list of possible pairs in the player's hand that add to the
+   * guessCardValue.
+   *
+   * @return ArrayList<HashMap<Integer, Integer>>
+   */
+  public ArrayList<HashMap<Integer, Integer>> getPossiblePairs() {
+    return hand.getPossiblePairs(guessCardValue);
   }
 
   /**

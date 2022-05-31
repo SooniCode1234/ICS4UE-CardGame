@@ -1,6 +1,6 @@
 package ics4ue.sooni;
 
-public class Card {
+public class Card implements Comparable<Card> {
   private int value;
   private String suit;
 
@@ -14,6 +14,16 @@ public class Card {
     // Initialize the value and suit of the card
     this.value = value;
     this.suit = suit;
+  }
+
+  /**
+   * Order the cards by their value ascending order
+   *
+   * @param other the card to compare to
+   * @return the difference between the value of the cards
+   */
+  public int compareTo(Card other) {
+    return this.value - other.value;
   }
 
   /**
