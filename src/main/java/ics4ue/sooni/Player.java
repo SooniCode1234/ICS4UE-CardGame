@@ -1,6 +1,7 @@
 package ics4ue.sooni;
 
 public class Player {
+  private Hand hand;
   private boolean isShowingGuessCard;
   private int guessCardValue;
   private int score;
@@ -10,9 +11,29 @@ public class Player {
    */
   public Player() {
     // Initialize fields to default values
+    hand = new Hand();
     isShowingGuessCard = false;
     guessCardValue = 0;
     score = 0;
+  }
+
+  /**
+   * Returns the hand of the player.
+   *
+   * @return Hand
+   */
+  public Hand getHand() {
+    return hand;
+  }
+
+  /**
+   * Sets a card in the hand
+   *
+   * @param cardIndex The index of the card
+   * @param card      The new card
+   */
+  public void setCardValue(int cardIndex, Card card) {
+    hand.getCards()[cardIndex] = card;
   }
 
   /**
