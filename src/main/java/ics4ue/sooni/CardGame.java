@@ -42,7 +42,7 @@ public class CardGame {
       playerOne.setShowingGuessCard(true);
       System.out.println("PlayerOne, choose a card to place: ");
       System.out.println("Your cards are:");
-      System.out.println(playerOne.getHand());
+      System.out.println(playerOne.getHandString());
 
       // Regular expression to encompass the card numbers
       String cardIndexValidator = "[1-5]";
@@ -60,7 +60,7 @@ public class CardGame {
       int cardIndexInt = Integer.parseInt(cardIndex);
 
       // Get the card based on the cardIndex
-      Card cardToPlace = playerOne.getHand().getCards()[cardIndexInt - 1];
+      Card cardToPlace = playerOne.getCards()[cardIndexInt - 1];
 
       playerOne.setGuessCardValue(cardToPlace.getValue());
 

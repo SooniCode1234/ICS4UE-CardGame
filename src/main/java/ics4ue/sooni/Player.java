@@ -18,12 +18,21 @@ public class Player {
   }
 
   /**
-   * Returns the hand of the player.
+   * Returns the cards of the player.
    *
-   * @return Hand
+   * @return Card[]
    */
-  public Hand getHand() {
-    return hand;
+  public Card[] getCards() {
+    return hand.getCards();
+  }
+
+  /**
+   * Returns the toString of the player's hand.
+   *
+   * @return String
+   */
+  public String getHandString() {
+    return hand.toString();
   }
 
   /**

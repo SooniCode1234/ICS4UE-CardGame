@@ -45,12 +45,12 @@ public class Deck {
     for (int i = 0; i < players.length; i++) {
       Player player = players[i];
 
-      for (int j = 0; j < player.getHand().getCards().length; j++) {
+      for (int j = 0; j < player.getCards().length; j++) {
         // Get a random index from the deck
         int index = new Random().nextInt(cards.size() - 1);
 
         // Set the cards in the player's hand to be the card that was removed
-        player.getHand().getCards()[j] = cards.remove(index);
+        player.getCards()[j] = cards.remove(index);
       }
     }
   }
