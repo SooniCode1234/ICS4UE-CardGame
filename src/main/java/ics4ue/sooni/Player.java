@@ -44,7 +44,7 @@ public class Player {
    *
    * @return ArrayList<HashMap<Integer, Integer>>
    */
-  public ArrayList<HashMap<Integer, Integer>> getPossiblePairs() {
+  public HashMap<Integer, Integer> getPossiblePairs(int guessCardValue) {
     return hand.getPossiblePairs(guessCardValue);
   }
 
@@ -101,6 +101,13 @@ public class Player {
    */
   public int getScore() {
     return score;
+  }
+
+  /**
+   * Add a point to the player's score.
+   */
+  public void addPoint() {
+    score++;
   }
 
   /**

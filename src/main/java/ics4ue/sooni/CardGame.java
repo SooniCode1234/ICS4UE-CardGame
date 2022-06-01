@@ -46,16 +46,17 @@ public class CardGame {
       System.out.println("Your cards are:");
       System.out.println(playerOne.getHandString());
 
+      // Test printing out playertwo's hand
       System.out.println("PlayerTwo's cards are:");
       System.out.println(playerTwo.getHandString());
 
       // Regular expression to encompass the card numbers
-      String cardIndexValidator = "[1-5]";
+      String indexValidator = "[1-5]";
       System.out.print("Enter the index of the card you want to place: ");
       String cardIndex = input.nextLine();
 
       // Validate the cardIndex input
-      while (!cardIndex.matches(cardIndexValidator)) {
+      while (!cardIndex.matches(indexValidator)) {
         System.out
             .print("Your index needs to be from the numbers 1-5. Enter the index of the card you want to place: ");
         cardIndex = input.nextLine();
@@ -67,13 +68,54 @@ public class CardGame {
       // Get the card based on the cardIndex
       Card cardToPlace = playerOne.getCards()[cardIndexInt - 1];
 
-      System.out.println("PlayerOne, you have chosen to place " + cardToPlace.getValue());
-
       playerOne.setGuessCardValue(cardToPlace.getValue());
 
       // Get the pair of cards in playerTwo's hand that sum to the value of the
       // cardToPlace
-      ArrayList<HashMap<Integer, Integer>> pairs = playerTwo.getPossiblePairs();
+      HashMap<Integer, Integer> cardPairs = playerTwo.getPossiblePairs(cardToPlace.getValue());
+
+      // If there are pairs, show them
+      if (cardPairs.size() > 0) {
+        System.out.println("PlayerTwo, you have the following pairs:");
+
+        // Iterate through the cardPairs
+        for (int i = 0; i < cardPairs.size(); i++) {
+          // Get the key and value
+          int key = (int) cardPairs.keySet().toArray()[i];
+          int value = cardPairs.get(key);
+
+          // Print the key and value
+          System.out.println((i + 1) + ": " + key + " and " + value);
+        }
+
+        // Ask the player to choose a pair
+        System.out.print("Which pair do you want to choose? ");
+        String pairIndex = input.nextLine();
+
+        // Validate the pairIndex input
+        while (!pairIndex.matches(indexValidator)) {
+          System.out
+              .print("Your index needs to be from the numbers 1-5. Enter the index of the pair you want to choose: ");
+          pairIndex = input.nextLine();
+        }
+
+        // Convert the pairIndex to an integer
+        int pairIndexInt = Integer.parseInt(pairIndex);
+
+        // Get the key and value of the pair
+        int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
+        int value = cardPairs.get(key);
+
+        // Add a point to playerOne
+        System.out.println("PlayerOne gets a point!");
+        playerOne.addPoint();
+      } else {
+        System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
+
+        // Add a point to playerTwo
+        System.out.println("PlayerTwo gets a point!");
+        playerTwo.addPoint();
+      }
     } else {
       System.out.println("PlayerTwo will go first!");
     }
