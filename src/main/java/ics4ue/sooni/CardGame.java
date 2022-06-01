@@ -53,20 +53,23 @@ public class CardGame {
       // Regular expression to encompass the card numbers
       String indexValidator = "[1-5]";
       System.out.print("Enter the index of the card you want to place: ");
-      String cardIndex = input.nextLine();
+      String cardToPlaceIndex = input.nextLine();
 
       // Validate the cardIndex input
-      while (!cardIndex.matches(indexValidator)) {
+      while (!cardToPlaceIndex.matches(indexValidator)) {
         System.out
             .print("Your index needs to be from the numbers 1-5. Enter the index of the card you want to place: ");
-        cardIndex = input.nextLine();
+        cardToPlaceIndex = input.nextLine();
       }
 
       // Convert the cardIndex to an integer
-      int cardIndexInt = Integer.parseInt(cardIndex);
+      int cardToPlaceInt = Integer.parseInt(cardToPlaceIndex);
+
+      // Get the index of the card to place
+      int cardToPlaceIndexInt = cardToPlaceInt - 1;
 
       // Get the card based on the cardIndex
-      Card cardToPlace = playerOne.getCards()[cardIndexInt - 1];
+      Card cardToPlace = playerOne.getCards()[cardToPlaceIndexInt];
 
       playerOne.setGuessCardValue(cardToPlace.getValue());
 
@@ -109,12 +112,53 @@ public class CardGame {
         // Add a point to playerOne
         System.out.println("PlayerOne gets a point!");
         playerOne.addPoint();
+
+        // Get the index of the card in playerTwo's hand that matches the key
+        // and value
+        int playerTwoFirstCardIndex = 0;
+        int playerTwoSecondCardIndex = 0;
+
+        for (int i = 0; i < playerTwo.getCards().length; i++) {
+          int playerTwoCardValue = playerTwo.getCards()[i].getValue();
+
+          // Check if the card value matches the key
+          if (playerTwoCardValue == key) {
+            playerTwoFirstCardIndex = i;
+          } else if (playerTwoCardValue == value) {
+            // Check if the card value matches the value
+            playerTwoSecondCardIndex = i;
+          }
+        }
+
+        // Discard playerTwo's cards
+        playerTwo.discard(playerTwoFirstCardIndex);
+        playerTwo.discard(playerTwoSecondCardIndex);
+
+        // Discard playerOne's card
+        playerOne.discard(cardToPlaceIndexInt);
+
+        // Print out the playerOne's hand and playerTwo's hand for testing
+        System.out.println("PlayerOne's cards are:");
+        System.out.println(playerOne.getHandString());
+
+        System.out.println("PlayerTwo's cards are:");
+        System.out.println(playerTwo.getHandString());
       } else {
         System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
 
         // Add a point to playerTwo
         System.out.println("PlayerTwo gets a point!");
         playerTwo.addPoint();
+
+        // Discard playerOne's card
+        playerOne.discard(cardToPlaceIndexInt);
+
+        // Print out the playerOne's hand and playerTwo's hand for testing
+        System.out.println("PlayerOne's cards are:");
+        System.out.println(playerOne.getHandString());
+
+        System.out.println("PlayerTwo's cards are:");
+        System.out.println(playerTwo.getHandString());
       }
     } else {
       System.out.println("PlayerTwo will go first!");

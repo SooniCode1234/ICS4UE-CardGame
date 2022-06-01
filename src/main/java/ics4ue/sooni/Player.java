@@ -21,6 +21,15 @@ public class Player {
   }
 
   /**
+   * Discard the card at the given index.
+   *
+   * @param index the index of the card to discard
+   */
+  public void discard(int index) {
+    hand.removeCard(index);
+  }
+
+  /**
    * Returns the cards of the player.
    *
    * @return Card[]

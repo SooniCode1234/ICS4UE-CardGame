@@ -14,6 +14,15 @@ public class Hand {
   }
 
   /**
+   * Removes the card at the specified index.
+   *
+   * @param index the index of the card to remove
+   */
+  public void removeCard(int index) {
+    cards[index] = null;
+  }
+
+  /**
    * The cards holding
    *
    * @return Card[]
