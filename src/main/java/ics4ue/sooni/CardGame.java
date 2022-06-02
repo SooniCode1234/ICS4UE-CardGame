@@ -36,149 +36,199 @@ public class CardGame {
       firstPlayer = input.nextLine();
     }
 
-    // Check if playerOne or playerTwo goes first
-    if (firstPlayer.toLowerCase().equals("playerOne".toLowerCase())) {
-      System.out.println("PlayerOne will go first!");
+    // Boolean to keep track of who's turn it is
+    boolean activePlayerTurn = firstPlayer.toLowerCase().equals("playerOne".toLowerCase());
+    Player activePlayer = activePlayerTurn ? playerOne : playerTwo;
+    Player inactivePlayer = activePlayerTurn ? playerTwo : playerOne;
+    String activePlayerName = activePlayerTurn ? "PlayerOne" : "PlayerTwo";
+    String inactivePlayerName = activePlayerTurn ? "PlayerTwo" : "PlayerOne";
 
-      // Choose the card to place
-      playerOne.setShowingGuessCard(true);
-      System.out.println("PlayerOne, choose a card to place: ");
-      System.out.println("Your cards are:");
+    if (activePlayerTurn) {
+      System.out.println(activePlayerName + " will go first!");
+
+      // Play a round
+      playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck, input);
+
+      // Check if the game is over
+
+      // Switch the activePlayerTurn
+      activePlayerTurn = !activePlayerTurn;
+    } else {
+      System.out.println(activePlayerName + " will go first!");
+
+      // Play a round
+      playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck, input);
+
+      // Check if the game is over
+
+      // Switch the activePlayerTurn
+      activePlayerTurn = !activePlayerTurn;
+    }
+  }
+
+  /*
+   * Method to play a round of the game
+   *
+   * @param activePlayer the player who is currently active
+   * 
+   * @param inactivePlayer the player who is currently inactive
+   * 
+   * @param activePlayerName the name of the player who is currently active
+   * 
+   * @param inactivePlayerName the name of the player who is currently inactive
+   * 
+   * @param playerOne the player one object
+   * 
+   * @param playerTwo the player two object
+   * 
+   * @param deck the deck object
+   * 
+   * @param input the scanner object
+   */
+  public static void playRound(Player activePlayer, Player inactivePlayer, String activePlayerName,
+      String inactivePlayerName, Player playerOne, Player playerTwo, Deck deck, Scanner input) {
+    // Choose the card to place
+    activePlayer.setShowingGuessCard(true);
+    System.out.println(activePlayerName + ", choose a card to place: ");
+    System.out.println("Your cards are:");
+    System.out.println(activePlayer.getHandString());
+
+    // Test printing out playertwo's hand
+    System.out.println("PlayerTwo's cards are:");
+    System.out.println(playerTwo.getHandString());
+
+    // Regular expression to encompass the card numbers
+    String indexValidator = "[1-5]";
+    System.out.print("Enter the index of the card you want to place: ");
+    String cardToPlaceIndex = input.nextLine();
+
+    // Validate the cardIndex input
+    while (!cardToPlaceIndex.matches(indexValidator)) {
+      System.out
+          .print("Your index needs to be from the numbers 1-5. Enter the index of the card you want to place: ");
+      cardToPlaceIndex = input.nextLine();
+    }
+
+    // Convert the cardIndex to an integer
+    int cardToPlaceInt = Integer.parseInt(cardToPlaceIndex);
+
+    // Get the index of the card to place
+    int cardToPlaceIndexInt = cardToPlaceInt - 1;
+
+    // Get the card based on the cardIndex
+    Card cardToPlace = activePlayer.getCards()[cardToPlaceIndexInt];
+
+    activePlayer.setGuessCardValue(cardToPlace.getValue());
+
+    // Get the pair of cards in the inactivePlayer's hand that sum to the value of
+    // the
+    // cardToPlace
+    HashMap<Integer, Integer> cardPairs = inactivePlayer.getPossiblePairs(cardToPlace.getValue());
+
+    // If there are pairs, show them
+    if (cardPairs.size() > 0) {
+      System.out.println(inactivePlayerName + ", you have the following pairs:");
+
+      // Iterate through the cardPairs
+      for (int i = 0; i < cardPairs.size(); i++) {
+        // Get the key and value
+        int key = (int) cardPairs.keySet().toArray()[i];
+        int value = cardPairs.get(key);
+
+        // Print the key and value
+        System.out.println((i + 1) + ": " + key + " and " + value);
+      }
+
+      // Ask the player to choose a pair
+      System.out.print("Which pair do you want to choose? ");
+      String pairIndex = input.nextLine();
+
+      // Validate the pairIndex input
+      while (!pairIndex.matches(indexValidator)) {
+        System.out
+            .print("Your index needs to be from the numbers 1-5. Enter the index of the pair you want to choose: ");
+        pairIndex = input.nextLine();
+      }
+
+      // Convert the pairIndex to an integer
+      int pairIndexInt = Integer.parseInt(pairIndex);
+
+      // Get the key and value of the pair
+      int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
+      int value = cardPairs.get(key);
+
+      // Add a point to the activePlayer
+      System.out.println(activePlayerName + " gets a point!");
+      activePlayer.addPoint();
+
+      // Get the index of the card in inactive player's hand that matches the key
+      // and value
+      int inactivePlayerFirstCardIndex = 0;
+      int inactivePlayerSecondCardIndex = 0;
+
+      for (int i = 0; i < inactivePlayer.getCards().length; i++) {
+        int inactivePlayerCardValue = inactivePlayer.getCards()[i].getValue();
+
+        // Check if the card value matches the key
+        if (inactivePlayerCardValue == key) {
+          inactivePlayerFirstCardIndex = i;
+        } else if (inactivePlayerCardValue == value) {
+          // Check if the card value matches the value
+          inactivePlayerSecondCardIndex = i;
+        }
+      }
+
+      // Discard inactivePlayer's cards
+      inactivePlayer.discard(inactivePlayerFirstCardIndex);
+      inactivePlayer.discard(inactivePlayerSecondCardIndex);
+
+      // Discard activePlayer's card
+      activePlayer.discard(cardToPlaceIndexInt);
+
+      // Print out the playerOne's hand and playerTwo's hand for testing
+      System.out.println("PlayerOne's cards are:");
       System.out.println(playerOne.getHandString());
 
-      // Test printing out playertwo's hand
       System.out.println("PlayerTwo's cards are:");
       System.out.println(playerTwo.getHandString());
 
-      // Regular expression to encompass the card numbers
-      String indexValidator = "[1-5]";
-      System.out.print("Enter the index of the card you want to place: ");
-      String cardToPlaceIndex = input.nextLine();
+      // Draw a new card for activePlayer
+      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
+      activePlayer.addCard(cardToPlaceIndexInt, deck);
 
-      // Validate the cardIndex input
-      while (!cardToPlaceIndex.matches(indexValidator)) {
-        System.out
-            .print("Your index needs to be from the numbers 1-5. Enter the index of the card you want to place: ");
-        cardToPlaceIndex = input.nextLine();
-      }
+      // Draw two new card for inactivePlayer
+      inactivePlayer.addCard(inactivePlayerFirstCardIndex, deck);
+      inactivePlayer.addCard(inactivePlayerSecondCardIndex, deck);
 
-      // Convert the cardIndex to an integer
-      int cardToPlaceInt = Integer.parseInt(cardToPlaceIndex);
+      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
 
-      // Get the index of the card to place
-      int cardToPlaceIndexInt = cardToPlaceInt - 1;
+      // Print out the playerOne's hand and playerTwo's hand for testing
+      System.out.println("PlayerOne's cards are:");
+      System.out.println(playerOne.getHandString());
 
-      // Get the card based on the cardIndex
-      Card cardToPlace = playerOne.getCards()[cardToPlaceIndexInt];
-
-      playerOne.setGuessCardValue(cardToPlace.getValue());
-
-      // Get the pair of cards in playerTwo's hand that sum to the value of the
-      // cardToPlace
-      HashMap<Integer, Integer> cardPairs = playerTwo.getPossiblePairs(cardToPlace.getValue());
-
-      // If there are pairs, show them
-      if (cardPairs.size() > 0) {
-        System.out.println("PlayerTwo, you have the following pairs:");
-
-        // Iterate through the cardPairs
-        for (int i = 0; i < cardPairs.size(); i++) {
-          // Get the key and value
-          int key = (int) cardPairs.keySet().toArray()[i];
-          int value = cardPairs.get(key);
-
-          // Print the key and value
-          System.out.println((i + 1) + ": " + key + " and " + value);
-        }
-
-        // Ask the player to choose a pair
-        System.out.print("Which pair do you want to choose? ");
-        String pairIndex = input.nextLine();
-
-        // Validate the pairIndex input
-        while (!pairIndex.matches(indexValidator)) {
-          System.out
-              .print("Your index needs to be from the numbers 1-5. Enter the index of the pair you want to choose: ");
-          pairIndex = input.nextLine();
-        }
-
-        // Convert the pairIndex to an integer
-        int pairIndexInt = Integer.parseInt(pairIndex);
-
-        // Get the key and value of the pair
-        int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
-        int value = cardPairs.get(key);
-
-        // Add a point to playerOne
-        System.out.println("PlayerOne gets a point!");
-        playerOne.addPoint();
-
-        // Get the index of the card in playerTwo's hand that matches the key
-        // and value
-        int playerTwoFirstCardIndex = 0;
-        int playerTwoSecondCardIndex = 0;
-
-        for (int i = 0; i < playerTwo.getCards().length; i++) {
-          int playerTwoCardValue = playerTwo.getCards()[i].getValue();
-
-          // Check if the card value matches the key
-          if (playerTwoCardValue == key) {
-            playerTwoFirstCardIndex = i;
-          } else if (playerTwoCardValue == value) {
-            // Check if the card value matches the value
-            playerTwoSecondCardIndex = i;
-          }
-        }
-
-        // Discard playerTwo's cards
-        playerTwo.discard(playerTwoFirstCardIndex);
-        playerTwo.discard(playerTwoSecondCardIndex);
-
-        // Discard playerOne's card
-        playerOne.discard(cardToPlaceIndexInt);
-
-        // Print out the playerOne's hand and playerTwo's hand for testing
-        System.out.println("PlayerOne's cards are:");
-        System.out.println(playerOne.getHandString());
-
-        System.out.println("PlayerTwo's cards are:");
-        System.out.println(playerTwo.getHandString());
-
-        // Draw a new card for playerOne
-        System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
-        playerOne.addCard(cardToPlaceIndexInt, deck);
-
-        // Draw two new card for playerTwo
-        playerTwo.addCard(playerTwoFirstCardIndex, deck);
-        playerTwo.addCard(playerTwoSecondCardIndex, deck);
-
-        System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
-
-        // Print out the playerOne's hand and playerTwo's hand for testing
-        System.out.println("PlayerOne's cards are:");
-        System.out.println(playerOne.getHandString());
-
-        System.out.println("PlayerTwo's cards are:");
-        System.out.println(playerTwo.getHandString());
-      } else {
-        System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
-
-        // Add a point to playerTwo
-        System.out.println("PlayerTwo gets a point!");
-        playerTwo.addPoint();
-
-        // Discard playerOne's card
-        playerOne.discard(cardToPlaceIndexInt);
-
-        // Print out the playerOne's hand and playerTwo's hand for testing
-        System.out.println("PlayerOne's cards are:");
-        System.out.println(playerOne.getHandString());
-
-        System.out.println("PlayerTwo's cards are:");
-        System.out.println(playerTwo.getHandString());
-      }
+      System.out.println("PlayerTwo's cards are:");
+      System.out.println(playerTwo.getHandString());
     } else {
-      System.out.println("PlayerTwo will go first!");
+      System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
+
+      // Discard activePlayer's card
+      activePlayer.discard(cardToPlaceIndexInt);
+
+      // Draw a new card for activePlayer
+      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
+      activePlayer.addCard(cardToPlaceIndexInt, deck);
+      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
+
+      // Add a point to the inactivePlayer
+      System.out.println(inactivePlayerName + " gets a point!");
+      inactivePlayer.addPoint();
+
+      // Print out the playerOne's hand and playerTwo's hand for testing
+      System.out.println("PlayerOne's cards are:");
+      System.out.println(playerOne.getHandString());
+
+      System.out.println("PlayerTwo's cards are:");
+      System.out.println(playerTwo.getHandString());
     }
   }
 }
