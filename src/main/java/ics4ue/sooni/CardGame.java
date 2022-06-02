@@ -93,10 +93,6 @@ public class CardGame {
     System.out.println("Your cards are:");
     System.out.println(activePlayer.getHandString());
 
-    // Test printing out playertwo's hand
-    System.out.println("PlayerTwo's cards are:");
-    System.out.println(playerTwo.getHandString());
-
     // Regular expression to encompass the card numbers
     String indexValidator = "[1-5]";
     System.out.print("Enter the index of the card you want to place: ");
@@ -185,29 +181,12 @@ public class CardGame {
       // Discard activePlayer's card
       activePlayer.discard(cardToPlaceIndexInt);
 
-      // Print out the playerOne's hand and playerTwo's hand for testing
-      System.out.println("PlayerOne's cards are:");
-      System.out.println(playerOne.getHandString());
-
-      System.out.println("PlayerTwo's cards are:");
-      System.out.println(playerTwo.getHandString());
-
       // Draw a new card for activePlayer
-      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
       activePlayer.addCard(cardToPlaceIndexInt, deck);
 
       // Draw two new card for inactivePlayer
       inactivePlayer.addCard(inactivePlayerFirstCardIndex, deck);
       inactivePlayer.addCard(inactivePlayerSecondCardIndex, deck);
-
-      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
-
-      // Print out the playerOne's hand and playerTwo's hand for testing
-      System.out.println("PlayerOne's cards are:");
-      System.out.println(playerOne.getHandString());
-
-      System.out.println("PlayerTwo's cards are:");
-      System.out.println(playerTwo.getHandString());
     } else {
       System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
 
@@ -215,20 +194,18 @@ public class CardGame {
       activePlayer.discard(cardToPlaceIndexInt);
 
       // Draw a new card for activePlayer
-      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
       activePlayer.addCard(cardToPlaceIndexInt, deck);
-      System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
 
       // Add a point to the inactivePlayer
       System.out.println(inactivePlayerName + " gets a point!");
       inactivePlayer.addPoint();
-
-      // Print out the playerOne's hand and playerTwo's hand for testing
-      System.out.println("PlayerOne's cards are:");
-      System.out.println(playerOne.getHandString());
-
-      System.out.println("PlayerTwo's cards are:");
-      System.out.println(playerTwo.getHandString());
     }
+
+    // Print the number of cards left in the deck
+    System.out.println("The deck has " + deck.getCards().size() + " cards left.");
+
+    // Print the number of points each player has 
+    System.out.println(activePlayerName + " has " + activePlayer.getScore() + " points.");
+    System.out.println(inactivePlayerName + " has " + inactivePlayer.getScore() + " points.");
   }
 }
