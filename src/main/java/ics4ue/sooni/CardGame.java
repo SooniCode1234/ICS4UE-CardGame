@@ -143,6 +143,23 @@ public class CardGame {
 
         System.out.println("PlayerTwo's cards are:");
         System.out.println(playerTwo.getHandString());
+
+        // Draw a new card for playerOne
+        System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
+        playerOne.addCard(cardToPlaceIndexInt, deck);
+
+        // Draw two new card for playerTwo
+        playerTwo.addCard(playerTwoFirstCardIndex, deck);
+        playerTwo.addCard(playerTwoSecondCardIndex, deck);
+
+        System.out.println("Deck (CardGame) has " + deck.getCards().size() + " cards left.");
+
+        // Print out the playerOne's hand and playerTwo's hand for testing
+        System.out.println("PlayerOne's cards are:");
+        System.out.println(playerOne.getHandString());
+
+        System.out.println("PlayerTwo's cards are:");
+        System.out.println(playerTwo.getHandString());
       } else {
         System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
 

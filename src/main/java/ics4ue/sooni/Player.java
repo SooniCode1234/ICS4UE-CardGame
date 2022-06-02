@@ -30,6 +30,18 @@ public class Player {
   }
 
   /**
+   * Add the given card to the player's hand.
+   *
+   * @param index the index of the card to add
+   * @param deck  the deck of cards
+   */
+  public void addCard(int index, Deck deck) {
+    Card topCard = deck.deal();
+
+    hand.addCard(index, topCard);
+  }
+
+  /**
    * Returns the cards of the player.
    *
    * @return Card[]

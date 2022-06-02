@@ -37,6 +37,17 @@ public class Deck {
   }
 
   /**
+   * Returns the top card of the deck.
+   *
+   * @return Card
+   */
+  public Card deal() {
+    System.out.println("Deck.deal(): cards.size() = " + cards.size());
+
+    return cards.remove(0);
+  }
+
+  /**
    * Deals the cards to the players.
    *
    * @param players the players to deal to

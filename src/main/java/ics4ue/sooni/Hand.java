@@ -32,6 +32,16 @@ public class Hand {
   }
 
   /**
+   * Adds a card to the hand.
+   *
+   * @param index the index to add the card to
+   * @param card  the card to add
+   */
+  public void addCard(int index, Card card) {
+    cards[index] = card;
+  }
+
+  /**
    * Get a list of possible pairs in the player's hand that add to the
    * guessCardValue.
    *
