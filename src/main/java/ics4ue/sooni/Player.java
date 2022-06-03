@@ -84,7 +84,7 @@ public class Player {
    * 
    * @return boolean
    */
-  public boolean isShowingGuessCard() {
+  public boolean getShowingGuessCard() {
     return isShowingGuessCard;
   }
 

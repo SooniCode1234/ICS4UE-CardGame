@@ -1,10 +1,12 @@
 package ics4ue.sooni;
 
 import java.util.Scanner;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CardGame {
+
+  public static boolean exitGame = false;
+
   public static void main(String[] args) {
     // Create a new scanner object
     Scanner input = new Scanner(System.in);
@@ -36,33 +38,81 @@ public class CardGame {
       firstPlayer = input.nextLine();
     }
 
-    // Boolean to keep track of who's turn it is
-    boolean activePlayerTurn = firstPlayer.toLowerCase().equals("playerOne".toLowerCase());
-    Player activePlayer = activePlayerTurn ? playerOne : playerTwo;
-    Player inactivePlayer = activePlayerTurn ? playerTwo : playerOne;
-    String activePlayerName = activePlayerTurn ? "PlayerOne" : "PlayerTwo";
-    String inactivePlayerName = activePlayerTurn ? "PlayerTwo" : "PlayerOne";
+    // Properties to keep track of who's turn it is
+    Player activePlayer = playerOne;
+    Player inactivePlayer = playerTwo;
+    String activePlayerName = "PlayerOne";
+    String inactivePlayerName = "PlayerTwo";
 
-    if (activePlayerTurn) {
-      System.out.println(activePlayerName + " will go first!");
-
-      // Play a round
-      playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck, input);
-
-      // Check if the game is over
-
-      // Switch the activePlayerTurn
-      activePlayerTurn = !activePlayerTurn;
+    // Check if the first player is playerOne
+    if (firstPlayer.toLowerCase().equals("playerOne".toLowerCase())) {
+      // Set the active player to playerOne
+      activePlayer = playerOne;
+      inactivePlayer = playerTwo;
+      activePlayerName = "PlayerOne";
+      inactivePlayerName = "PlayerTwo";
+      playerOne.setShowingGuessCard(true);
     } else {
-      System.out.println(activePlayerName + " will go first!");
+      // Set the active player to playerTwo
+      activePlayer = playerTwo;
+      inactivePlayer = playerOne;
+      activePlayerName = "PlayerTwo";
+      inactivePlayerName = "PlayerOne";
+      playerOne.setShowingGuessCard(false);
+    }
 
-      // Play a round
-      playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck, input);
+    while (true) {
+      if (playerOne.getShowingGuessCard()) {
+        // Play a round
+        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck,
+            input);
+
+        // Switch the players
+        activePlayer = playerTwo;
+        inactivePlayer = playerOne;
+        activePlayerName = "PlayerTwo";
+        inactivePlayerName = "PlayerOne";
+        playerOne.setShowingGuessCard(false);
+      } else {
+        // Play a round
+        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck,
+            input);
+
+        // Switch the players
+        activePlayer = playerOne;
+        inactivePlayer = playerTwo;
+        activePlayerName = "PlayerOne";
+        inactivePlayerName = "PlayerTwo";
+        playerOne.setShowingGuessCard(true);
+      }
 
       // Check if the game is over
+      if (exitGame) {
+        break;
+      }
+    }
+  }
 
-      // Switch the activePlayerTurn
-      activePlayerTurn = !activePlayerTurn;
+  /**
+   * Checks if the game is over
+   * 
+   * @param activePlayer
+   *                       The player whose turn it is
+   * @param inactivePlayer
+   *                       The player whose turn it is not
+   * @return boolean
+   */
+  public static boolean gameIsOver(Deck deck, Card cardToPlace, Player activePlayer, Player inactivePlayer) {
+    // Card pairs
+    HashMap<Integer, Integer> cardPairs = inactivePlayer.getPossiblePairs(cardToPlace.getValue());
+
+    // Check if the deck is empty, if so, the game is over
+    // If the deck has 3 or less cards and the inactive player has a match, the game
+    // is over
+    if (deck.getSize() <= 3 && cardPairs.size() > 0) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -121,6 +171,9 @@ public class CardGame {
     // cardToPlace
     HashMap<Integer, Integer> cardPairs = inactivePlayer.getPossiblePairs(cardToPlace.getValue());
 
+    // Game over
+    boolean gameOver = false;
+
     // If there are pairs, show them
     if (cardPairs.size() > 0) {
       System.out.println(inactivePlayerName + ", you have the following pairs:");
@@ -148,6 +201,24 @@ public class CardGame {
 
       // Convert the pairIndex to an integer
       int pairIndexInt = Integer.parseInt(pairIndex);
+
+      // Check if the game is over
+      if (gameIsOver(deck, cardToPlace, activePlayer, inactivePlayer)) {
+        System.out.println("The game is over!");
+
+        // Print the winner
+        if (activePlayer.getScore() > inactivePlayer.getScore()) {
+          System.out.println("The winner is " + activePlayerName + "!");
+        } else if (activePlayer.getScore() < inactivePlayer.getScore()) {
+          System.out.println("The winner is " + inactivePlayerName + "!");
+        } else {
+          System.out.println("The game is a tie!");
+        }
+
+        gameOver = true;
+        exitGame = true;
+        return;
+      }
 
       // Get the key and value of the pair
       int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
@@ -201,10 +272,15 @@ public class CardGame {
       inactivePlayer.addPoint();
     }
 
+    // Check if the game is over, if so, return
+    if (gameOver) {
+      return;
+    }
+
     // Print the number of cards left in the deck
     System.out.println("The deck has " + deck.getCards().size() + " cards left.");
 
-    // Print the number of points each player has 
+    // Print the number of points each player has
     System.out.println(activePlayerName + " has " + activePlayer.getScore() + " points.");
     System.out.println(inactivePlayerName + " has " + inactivePlayer.getScore() + " points.");
   }

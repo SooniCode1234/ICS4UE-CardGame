@@ -30,6 +30,15 @@ public class Deck {
   }
 
   /**
+   * Returns the number of cards in the deck.
+   *
+   * @return int
+   */
+  public int getSize() {
+    return cards.size();
+  }
+
+  /**
    * Shuffles the deck.
    */
   public void shuffle() {
