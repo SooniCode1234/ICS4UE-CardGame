@@ -20,7 +20,7 @@ public class Card implements Comparable<Card> {
    * Order the cards by their value ascending order
    *
    * @param other the card to compare to
-   * @return the difference between the value of the cards
+   * @return int
    */
   public int compareTo(Card other) {
     return this.value - other.value;

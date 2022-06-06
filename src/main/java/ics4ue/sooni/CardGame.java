@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 public class CardGame {
 
+  // A boolean to determine if the game is over
   public static boolean exitGame = false;
 
   public static void main(String[] args) {
@@ -61,7 +62,10 @@ public class CardGame {
       playerOne.setShowingGuessCard(false);
     }
 
+    // Indefinitely loop until the game is over
     while (true) {
+      // Check which player goes first by checking if playerOne is showing the guess
+      // card
       if (playerOne.getShowingGuessCard()) {
         // Play a round
         playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck,
@@ -144,6 +148,11 @@ public class CardGame {
       } else {
         System.out.println("The game is a tie!");
       }
+
+      // Print the scores
+      System.out.println("The scores are: ");
+      System.out.println(activePlayerName + ": " + activePlayer.getScore());
+      System.out.println(inactivePlayerName + ": " + inactivePlayer.getScore());
 
       return true;
     }
@@ -247,11 +256,6 @@ public class CardGame {
 
       // If the game is over, return
       if (exitGame) {
-        // Print the scores
-        System.out.println("The scores are: ");
-        System.out.println(activePlayerName + ": " + activePlayer.getScore());
-        System.out.println(inactivePlayerName + ": " + inactivePlayer.getScore());
-
         return;
       }
 
@@ -260,6 +264,7 @@ public class CardGame {
       int inactivePlayerFirstCardIndex = 0;
       int inactivePlayerSecondCardIndex = 0;
 
+      // Iterate through the inactivePlayer's hand
       for (int i = 0; i < inactivePlayer.getCards().length; i++) {
         int inactivePlayerCardValue = inactivePlayer.getCards()[i].getValue();
 
@@ -267,7 +272,6 @@ public class CardGame {
         if (inactivePlayerCardValue == key) {
           inactivePlayerFirstCardIndex = i;
         } else if (inactivePlayerCardValue == value) {
-          // Check if the card value matches the value
           inactivePlayerSecondCardIndex = i;
         }
       }
@@ -297,11 +301,6 @@ public class CardGame {
 
       // If the game is over, return
       if (exitGame) {
-        // Print the scores
-        System.out.println("The scores are: ");
-        System.out.println(activePlayerName + ": " + activePlayer.getScore());
-        System.out.println(inactivePlayerName + ": " + inactivePlayer.getScore());
-
         return;
       }
 
