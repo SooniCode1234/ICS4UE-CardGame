@@ -11,7 +11,7 @@ public class Deck {
    * Constructor for the Deck class.
    */
   public Deck() {
-    cards = new ArrayList<Card>();
+    cards = new ArrayList<>();
 
     // Hearts
     for (int i = 1; i <= 10; i++) {

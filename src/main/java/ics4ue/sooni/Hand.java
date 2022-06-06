@@ -49,7 +49,7 @@ public class Hand {
    */
   public HashMap<Integer, Integer> getPossiblePairs(int guessCardValue) {
     // Got the idea for this from https://www.youtube.com/watch?v=s1xA_K1JReo
-    HashMap<Integer, Integer> possiblePairs = new HashMap<Integer, Integer>();
+    HashMap<Integer, Integer> possiblePairs = new HashMap<>();
 
     // Order the cards by value
     Arrays.sort(cards);
@@ -90,6 +90,9 @@ public class Hand {
    */
   public String toString() {
     String result = "";
+
+    // Order the cards by value
+    Arrays.sort(cards);
 
     // Loop through the cards in the hand.
     for (int i = 0; i < cards.length; i++) {

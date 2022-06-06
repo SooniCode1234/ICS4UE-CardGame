@@ -1,8 +1,8 @@
 package ics4ue.sooni;
 
 public class Card implements Comparable<Card> {
-  private int value;
-  private String suit;
+  private final int value;
+  private final String suit;
 
   /**
    * Constructor for Card
@@ -33,15 +33,6 @@ public class Card implements Comparable<Card> {
    */
   public int getValue() {
     return value;
-  }
-
-  /**
-   * Getter for the suit of the card
-   * 
-   * @return String
-   */
-  public String getSuit() {
-    return suit;
   }
 
   /**

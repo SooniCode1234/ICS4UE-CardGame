@@ -36,20 +36,23 @@ public class CardGame {
     String firstPlayer = input.nextLine();
 
     // Validate the firstPlayer input
-    while (!firstPlayer.toLowerCase().equals("playerOne".toLowerCase())
-        && !firstPlayer.toLowerCase().equals("playerTwo".toLowerCase())) {
+    while (!firstPlayer.equalsIgnoreCase("playerOne")
+        && !firstPlayer.equalsIgnoreCase("playerTwo")) {
+      // Add a line break
+      addLineBreak();
+
       System.out.print("Who will go first? playerOne or playerTwo? Please explicitly enter playerOne or playerTwo: ");
       firstPlayer = input.nextLine();
     }
 
-    // Properties to keep track of who's turn it is
+    // Properties to keep track of whose turn it is
     Player activePlayer = playerOne;
     Player inactivePlayer = playerTwo;
     String activePlayerName = "PlayerOne";
     String inactivePlayerName = "PlayerTwo";
 
     // Check if the first player is playerOne
-    if (firstPlayer.toLowerCase().equals("playerOne".toLowerCase())) {
+    if (firstPlayer.equalsIgnoreCase("playerOne")) {
       // Set the active player to playerOne
       activePlayer = playerOne;
       inactivePlayer = playerTwo;
@@ -71,7 +74,7 @@ public class CardGame {
       // card
       if (playerOne.getShowingGuessCard()) {
         // Play a round
-        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck,
+        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, deck,
             input);
 
         // Switch the players
@@ -82,7 +85,7 @@ public class CardGame {
         playerOne.setShowingGuessCard(false);
       } else {
         // Play a round
-        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, playerOne, playerTwo, deck,
+        playRound(activePlayer, inactivePlayer, activePlayerName, inactivePlayerName, deck,
             input);
 
         // Switch the players
@@ -118,26 +121,24 @@ public class CardGame {
   /**
    * Checks if the game is over
    * 
-   * @param activePlayer
-   *                       The player whose turn it is
+   * @param deck           The deck of cards
+   * @param cardToPlace    The card to place
    * @param inactivePlayer
    *                       The player whose turn it is not
    * @return boolean
    */
-  public static boolean gameIsOver(Deck deck, Card cardToPlace, Player activePlayer, Player inactivePlayer) {
+  public static boolean gameIsOver(Deck deck, Card cardToPlace, Player inactivePlayer) {
     // Card pairs
     HashMap<Integer, Integer> cardPairs = inactivePlayer.getPossiblePairs(cardToPlace.getValue());
 
     // Check if the deck is empty, if so, the game is over
-    // If the deck has 3 or less cards and the inactive player has a match, the game
-    // is over
+    // If the deck has 3 or fewer cards and the inactive player has a match, the
+    // game is over
     // If the deck is empty, the game is over
     if (deck.getSize() <= 3 && cardPairs.size() > 0) {
       return true;
-    } else if (deck.getSize() == 0) {
-      return true;
     } else {
-      return false;
+      return deck.getSize() == 0;
     }
   }
 
@@ -155,7 +156,7 @@ public class CardGame {
   public static boolean printWinner(Player activePlayer, Player inactivePlayer, Deck deck, Card cardToPlace,
       String activePlayerName, String inactivePlayerName) {
     // Check if the game is over
-    if (gameIsOver(deck, cardToPlace, activePlayer, inactivePlayer)) {
+    if (gameIsOver(deck, cardToPlace, inactivePlayer)) {
       System.out.println("The game is over!");
 
       // Print the winner
@@ -188,17 +189,13 @@ public class CardGame {
    * @param activePlayerName the name of the player who is currently active
    * 
    * @param inactivePlayerName the name of the player who is currently inactive
-   * 
-   * @param playerOne the player one object
-   * 
-   * @param playerTwo the player two object
-   * 
+   *
    * @param deck the deck object
-   * 
+   *
    * @param input the scanner object
    */
   public static void playRound(Player activePlayer, Player inactivePlayer, String activePlayerName,
-      String inactivePlayerName, Player playerOne, Player playerTwo, Deck deck, Scanner input) {
+      String inactivePlayerName, Deck deck, Scanner input) {
     // Add a line break
     addLineBreak();
 
@@ -234,8 +231,6 @@ public class CardGame {
 
     // Get the card based on the cardIndex
     Card cardToPlace = activePlayer.getCards()[cardToPlaceIndexInt];
-
-    activePlayer.setGuessCardValue(cardToPlace.getValue());
 
     // Get the pair of cards in the inactivePlayer's hand that sum to the value of
     // the

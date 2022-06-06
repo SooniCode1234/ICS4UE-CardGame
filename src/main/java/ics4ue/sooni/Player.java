@@ -1,12 +1,10 @@
 package ics4ue.sooni;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Player {
   private Hand hand;
   private boolean isShowingGuessCard;
-  private int guessCardValue;
   private int score;
 
   /**
@@ -16,7 +14,6 @@ public class Player {
     // Initialize fields to default values
     hand = new Hand();
     isShowingGuessCard = false;
-    guessCardValue = 0;
     score = 0;
   }
 
@@ -70,16 +67,6 @@ public class Player {
   }
 
   /**
-   * Sets a card in the hand
-   *
-   * @param cardIndex The index of the card
-   * @param card      The new card
-   */
-  public void setCardValue(int cardIndex, Card card) {
-    hand.getCards()[cardIndex] = card;
-  }
-
-  /**
    * Returns whether the player is showing the guess card.
    * 
    * @return boolean
@@ -98,24 +85,6 @@ public class Player {
   }
 
   /**
-   * Returns the value of the guess card.
-   * 
-   * @return int
-   */
-  public int getGuessCardValue() {
-    return guessCardValue;
-  }
-
-  /**
-   * Sets the value of the guess card.
-   * 
-   * @param guessCardValue The value to set the guess card to.
-   */
-  public void setGuessCardValue(int guessCardValue) {
-    this.guessCardValue = guessCardValue;
-  }
-
-  /**
    * Returns the score of the player.
    * 
    * @return int
@@ -129,14 +98,5 @@ public class Player {
    */
   public void addPoint() {
     score++;
-  }
-
-  /**
-   * Sets the score of the player.
-   * 
-   * @param score The score to set the player to.
-   */
-  public void setScore(int score) {
-    this.score = score;
   }
 }
