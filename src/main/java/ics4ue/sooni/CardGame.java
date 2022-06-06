@@ -28,6 +28,9 @@ public class CardGame {
     System.out.println("Dealing the cards...");
     deck.deal(new Player[] { playerOne, playerTwo });
 
+    // Add a line break
+    addLineBreak();
+
     // Choose which player goes first
     System.out.print("Who will go first? playerOne or playerTwo? ");
     String firstPlayer = input.nextLine();
@@ -95,6 +98,21 @@ public class CardGame {
         break;
       }
     }
+  }
+
+  /*
+   * A method to add line breaks to the output
+   */
+  public static void addLineBreak() {
+    System.out.println();
+  }
+
+  /*
+   * A method to clear the screen
+   */
+  public static void clearScreen() {
+    System.out.print("\033[H\033[2J");
+    System.out.flush();
   }
 
   /**
@@ -181,6 +199,9 @@ public class CardGame {
    */
   public static void playRound(Player activePlayer, Player inactivePlayer, String activePlayerName,
       String inactivePlayerName, Player playerOne, Player playerTwo, Deck deck, Scanner input) {
+    // Add a line break
+    addLineBreak();
+
     // Choose the card to place
     activePlayer.setShowingGuessCard(true);
     System.out.println(activePlayerName + ", choose a card to place: ");
@@ -192,11 +213,17 @@ public class CardGame {
     System.out.print("Enter the index of the card you want to place: ");
     String cardToPlaceIndex = input.nextLine();
 
+    // Add a line break
+    addLineBreak();
+
     // Validate the cardIndex input
     while (!cardToPlaceIndex.matches(indexValidator)) {
       System.out
           .print("Your index needs to be from the numbers 1-5. Enter the index of the card you want to place: ");
       cardToPlaceIndex = input.nextLine();
+
+      // Add a line break
+      addLineBreak();
     }
 
     // Convert the cardIndex to an integer
@@ -233,11 +260,23 @@ public class CardGame {
       System.out.print("Which pair do you want to choose? ");
       String pairIndex = input.nextLine();
 
+      // Add line break
+      addLineBreak();
+
       // Validate the pairIndex input
-      while (!pairIndex.matches(indexValidator)) {
-        System.out
-            .print("Your index needs to be from the numbers 1-5. Enter the index of the pair you want to choose: ");
+      while (!pairIndex.matches(indexValidator) || Integer.parseInt(pairIndex) > cardPairs.size()) {
+        // If the number of pairs is greater than one, print the plural, otherwise if
+        // the pair is just one, print one
+        if (cardPairs.size() > 1) {
+          System.out.print("Your index needs to be from 1 to " + cardPairs.size() + "."
+              + " Enter the index of the pair you want to choose: ");
+        } else {
+          System.out.print("Your index needs to be 1. Enter the index of the pair you want to choose: ");
+        }
         pairIndex = input.nextLine();
+
+        // Add line break
+        addLineBreak();
       }
 
       // Convert the pairIndex to an integer
@@ -246,6 +285,9 @@ public class CardGame {
       // Get the key and value of the pair
       int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
       int value = cardPairs.get(key);
+
+      // Clear the screen
+      clearScreen();
 
       // Add a point to the activePlayer
       System.out.println(activePlayerName + " gets a point!");
@@ -290,6 +332,9 @@ public class CardGame {
       inactivePlayer.addCard(inactivePlayerFirstCardIndex, deck);
       inactivePlayer.addCard(inactivePlayerSecondCardIndex, deck);
     } else {
+      // Clear the screen
+      clearScreen();
+
       System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
 
       // Add a point to the inactivePlayer
