@@ -109,11 +109,46 @@ public class CardGame {
     // Check if the deck is empty, if so, the game is over
     // If the deck has 3 or less cards and the inactive player has a match, the game
     // is over
+    // If the deck is empty, the game is over
     if (deck.getSize() <= 3 && cardPairs.size() > 0) {
+      return true;
+    } else if (deck.getSize() == 0) {
       return true;
     } else {
       return false;
     }
+  }
+
+  /**
+   * Print the winner
+   *
+   * @param activePlayer       The player whose turn it is
+   * @param inactivePlayer     The player whose turn it is not
+   * @param deck               The deck
+   * @param cardToPlace        The card to place
+   * @param activePlayerName   The name of the active Player
+   * @param inactivePlayerName The name of the inactive Player
+   * @return boolean
+   */
+  public static boolean printWinner(Player activePlayer, Player inactivePlayer, Deck deck, Card cardToPlace,
+      String activePlayerName, String inactivePlayerName) {
+    // Check if the game is over
+    if (gameIsOver(deck, cardToPlace, activePlayer, inactivePlayer)) {
+      System.out.println("The game is over!");
+
+      // Print the winner
+      if (activePlayer.getScore() > inactivePlayer.getScore()) {
+        System.out.println("The winner is " + activePlayerName + "!");
+      } else if (activePlayer.getScore() < inactivePlayer.getScore()) {
+        System.out.println("The winner is " + inactivePlayerName + "!");
+      } else {
+        System.out.println("The game is a tie!");
+      }
+
+      return true;
+    }
+
+    return false;
   }
 
   /*
@@ -171,9 +206,6 @@ public class CardGame {
     // cardToPlace
     HashMap<Integer, Integer> cardPairs = inactivePlayer.getPossiblePairs(cardToPlace.getValue());
 
-    // Game over
-    boolean gameOver = false;
-
     // If there are pairs, show them
     if (cardPairs.size() > 0) {
       System.out.println(inactivePlayerName + ", you have the following pairs:");
@@ -202,24 +234,6 @@ public class CardGame {
       // Convert the pairIndex to an integer
       int pairIndexInt = Integer.parseInt(pairIndex);
 
-      // Check if the game is over
-      if (gameIsOver(deck, cardToPlace, activePlayer, inactivePlayer)) {
-        System.out.println("The game is over!");
-
-        // Print the winner
-        if (activePlayer.getScore() > inactivePlayer.getScore()) {
-          System.out.println("The winner is " + activePlayerName + "!");
-        } else if (activePlayer.getScore() < inactivePlayer.getScore()) {
-          System.out.println("The winner is " + inactivePlayerName + "!");
-        } else {
-          System.out.println("The game is a tie!");
-        }
-
-        gameOver = true;
-        exitGame = true;
-        return;
-      }
-
       // Get the key and value of the pair
       int key = (int) cardPairs.keySet().toArray()[pairIndexInt - 1];
       int value = cardPairs.get(key);
@@ -227,6 +241,19 @@ public class CardGame {
       // Add a point to the activePlayer
       System.out.println(activePlayerName + " gets a point!");
       activePlayer.addPoint();
+
+      // Check if the game is over
+      exitGame = printWinner(activePlayer, inactivePlayer, deck, cardToPlace, activePlayerName, inactivePlayerName);
+
+      // If the game is over, return
+      if (exitGame) {
+        // Print the scores
+        System.out.println("The scores are: ");
+        System.out.println(activePlayerName + ": " + activePlayer.getScore());
+        System.out.println(inactivePlayerName + ": " + inactivePlayer.getScore());
+
+        return;
+      }
 
       // Get the index of the card in inactive player's hand that matches the key
       // and value
@@ -261,20 +288,28 @@ public class CardGame {
     } else {
       System.out.println("PlayerTwo, you don't have any pairs that sum to " + cardToPlace.getValue());
 
+      // Add a point to the inactivePlayer
+      System.out.println(inactivePlayerName + " gets a point!");
+      inactivePlayer.addPoint();
+
+      // Check if the game is over
+      exitGame = printWinner(activePlayer, inactivePlayer, deck, cardToPlace, activePlayerName, inactivePlayerName);
+
+      // If the game is over, return
+      if (exitGame) {
+        // Print the scores
+        System.out.println("The scores are: ");
+        System.out.println(activePlayerName + ": " + activePlayer.getScore());
+        System.out.println(inactivePlayerName + ": " + inactivePlayer.getScore());
+
+        return;
+      }
+
       // Discard activePlayer's card
       activePlayer.discard(cardToPlaceIndexInt);
 
       // Draw a new card for activePlayer
       activePlayer.addCard(cardToPlaceIndexInt, deck);
-
-      // Add a point to the inactivePlayer
-      System.out.println(inactivePlayerName + " gets a point!");
-      inactivePlayer.addPoint();
-    }
-
-    // Check if the game is over, if so, return
-    if (gameOver) {
-      return;
     }
 
     // Print the number of cards left in the deck
